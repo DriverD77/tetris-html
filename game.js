@@ -36,11 +36,13 @@
 
   const LINE_POINTS = [0, 100, 300, 500, 800];
 
-  let board, piece, nextType, bag;
+  let board = newBoard();
+  let piece, nextType, bag;
   let score, level, lines;
   let best = Number(localStorage.getItem('tetris-best') || 0);
   let dropInterval, dropTimer, lastTime = 0;
   let running = false, paused = false, over = false;
+  let loopScheduled = false;
 
   bestEl.textContent = best;
 
@@ -133,11 +135,15 @@
       score += LINE_POINTS[cleared] * level;
       level = Math.floor(lines / 10) + 1;
       dropInterval = Math.max(80, 800 - (level - 1) * 60);
-      if (score > best) {
-        best = score;
-        localStorage.setItem('tetris-best', String(best));
-      }
+      saveBest();
       updateHud();
+    }
+  }
+
+  function saveBest() {
+    if (score > best) {
+      best = score;
+      localStorage.setItem('tetris-best', String(best));
     }
   }
 
@@ -172,12 +178,17 @@
     spawn();
     running = true;
     lastTime = performance.now();
-    requestAnimationFrame(loop);
+    if (!loopScheduled) {
+      loopScheduled = true;
+      requestAnimationFrame(loop);
+    }
   }
 
   function endGame() {
     over = true;
     running = false;
+    saveBest();
+    updateHud();
     btn.textContent = 'Play again';
     overlayText.innerHTML = 'Game over<br>Score: ' + score;
     overlay.classList.remove('hidden');
@@ -192,6 +203,7 @@
       overlay.classList.remove('hidden');
     } else {
       overlay.classList.add('hidden');
+      lastTime = performance.now(); // don't count paused time toward gravity
     }
   }
 
@@ -265,10 +277,12 @@
     nctx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
     if (!nextType) return;
     const shape = SHAPES[nextType];
-    // trim empty rows/cols to center the piece
-    const rows = shape.filter(r => r.some(v => v));
-    const cols = shape[0].map((_, i) => rows.some(r => r[i]));
-    const w = cols.length, h = rows.length;
+    // trim empty rows and columns so the piece sits centered
+    const rows = shape.filter(r => r.some(v => v)).map(r =>
+      r.slice(r.findIndex(v => v), r.lastIndexOf(1) + 1)
+    );
+    const w = rows.reduce((m, r) => Math.max(m, r.length), 0);
+    const h = rows.length;
     const offX = (nextCanvas.width - w * BLOCK) / 2 / BLOCK;
     const offY = (nextCanvas.height - h * BLOCK) / 2 / BLOCK;
     rows.forEach((row, r) =>
@@ -281,7 +295,10 @@
   // ---------- main loop ----------
 
   function loop(time) {
-    if (!running) return;
+    if (!running) {
+      loopScheduled = false;
+      return;
+    }
     requestAnimationFrame(loop);
 
     if (!paused && !over) {
@@ -356,6 +373,7 @@
   btn.addEventListener('click', () => {
     if (!running) start();
     else togglePause();
+    btn.blur(); // don't let Space re-trigger the button after a mouse click
   });
 
   draw();
