@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: radial-gradient(circle at 50% 20%, #1b2340, #0a0e1a 70%);
+  color: #e8ecf5;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrap {
+  text-align: center;
+  padding: 24px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  letter-spacing: 0.35em;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00d8e8, #a02ce0, #f04545, #f5d300);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.game {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.board-holder {
+  position: relative;
+}
+
+#board {
+  background: #05070f;
+  border: 2px solid #2a3355;
+  border-radius: 6px;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 7, 15, 0.82);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.overlay p {
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+.hidden {
+  display: none;
+}
+
+.panel {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #2a3355;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.box h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #8a94b8;
+  margin-bottom: 6px;
+}
+
+.box p {
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#next {
+  display: block;
+  margin: 0 auto;
+}
+
+button {
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0a0e1a;
+  background: linear-gradient(90deg, #00d8e8, #3ddc84);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.keys ul {
+  list-style: none;
+  font-size: 0.8rem;
+  color: #aab3d0;
+  line-height: 1.8;
+}
