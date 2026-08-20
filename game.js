@@ -230,7 +230,7 @@
     for (let r = 1; r < ROWS; r++) {
       ctx.beginPath();
       ctx.moveTo(0, r * BLOCK);
-      ctx.lineTo(canvas.width, canvas.height);
+      ctx.lineTo(canvas.width, r * BLOCK);
       ctx.stroke();
     }
 
